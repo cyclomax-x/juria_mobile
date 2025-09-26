@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir)",
+      "Bash(dir lib)",
+      "Bash(tree:*)",
+      "Bash(dir /s)",
+      "Bash(flutter analyze:*)",
+      "WebSearch",
+      "WebFetch(domain:aws.amazon.com)",
+      "Bash(dir:*)",
+      "Bash(flutter pub:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
