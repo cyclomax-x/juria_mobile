@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
 
 class ReceiverDetailsStep extends StatefulWidget {
@@ -117,7 +119,9 @@ class _ReceiverDetailsStepState extends State<ReceiverDetailsStep> {
                 if (value == null || value.isEmpty) {
                   return 'Please enter email';
                 }
-                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                if (!RegExp(
+                  r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                ).hasMatch(value)) {
                   return 'Please enter a valid email';
                 }
                 return null;
@@ -154,7 +158,11 @@ class _ReceiverDetailsStepState extends State<ReceiverDetailsStep> {
               },
             ),
             const SizedBox(height: 16),
-            _buildImageUploadSection('Passport Image', widget.passportImage, widget.onImageSelected),
+            _buildImageUploadSection(
+              'Passport Image',
+              widget.passportImage,
+              widget.onImageSelected,
+            ),
           ],
         ),
       ),
@@ -172,13 +180,51 @@ class _ReceiverDetailsStepState extends State<ReceiverDetailsStep> {
     );
   }
 
-  Widget _buildImageUploadSection(String title, File? image, Function(File?) onImageSelected) {
+  Widget _buildImageUploadSection(
+    String title,
+    File? image,
+    Function(File?) onImageSelected,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+          style: Theme.of(
+            context,
+          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 4),
+        Text.rich(
+          TextSpan(
+            text:
+                'We require a passport photo to verify receiver identity at custom clearance of your packages. We do not share your/receiver information with third parties and will be kept confidential. See our ',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+            children: [
+              TextSpan(
+                text: 'Privacy Policy',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                  decoration: TextDecoration.underline,
+                ),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () async {
+                    final url = Uri.parse(
+                      'https://cargo.juriacargo.com/data/privacy-policy',
+                    );
+                    if (await canLaunchUrl(url)) {
+                      await launchUrl(
+                        url,
+                        mode: LaunchMode.externalApplication,
+                      );
+                    }
+                  },
+              ),
+              const TextSpan(text: ' for more details.'),
+            ],
+          ),
         ),
         const SizedBox(height: 8),
         GestureDetector(
@@ -187,7 +233,10 @@ class _ReceiverDetailsStepState extends State<ReceiverDetailsStep> {
             height: 120,
             width: double.infinity,
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.shade300, style: BorderStyle.solid),
+              border: Border.all(
+                color: Colors.grey.shade300,
+                style: BorderStyle.solid,
+              ),
               borderRadius: BorderRadius.circular(8),
             ),
             child: image != null
@@ -198,7 +247,11 @@ class _ReceiverDetailsStepState extends State<ReceiverDetailsStep> {
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.cloud_upload_outlined, size: 40, color: Colors.grey.shade600),
+                      Icon(
+                        Icons.cloud_upload_outlined,
+                        size: 40,
+                        color: Colors.grey.shade600,
+                      ),
                       const SizedBox(height: 8),
                       Text(
                         'Tap to upload $title',

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -82,15 +83,42 @@ class ApiService {
     try {
       final includeAuth = !_publicEndpoints.contains(endpoint);
       final headers = await _getHeaders(includeAuth: includeAuth);
-      
+
+      debugPrint('--- API POST Request ---');
+      debugPrint('URL: $baseUrl$endpoint');
+      debugPrint('Headers: $headers');
+      debugPrint('Body: ${jsonEncode(data)}');
+      debugPrint('Auth Required: $includeAuth');
+      debugPrint('Sending request now...');
+
       final response = await _client.post(
         Uri.parse('$baseUrl$endpoint'),
         headers: headers,
         body: jsonEncode(data),
-      ).timeout(const Duration(seconds: 30));
+      ).timeout(
+        const Duration(seconds: 30),
+        onTimeout: () {
+          debugPrint('!!! HTTP Request Timeout (30s) !!!');
+          throw Exception('Connection timeout');
+        },
+      );
 
-      return _handleResponse(response);
-    } catch (e) {
+      debugPrint('--- API POST Response Received ---');
+      debugPrint('Status Code: ${response.statusCode}');
+      debugPrint('Response Headers: ${response.headers}');
+      debugPrint('Response Body Length: ${response.body.length}');
+      debugPrint('Response Body: ${response.body}');
+      debugPrint('-----------------------------------');
+
+      final result = _handleResponse(response);
+      debugPrint('Parsed response: $result');
+      return result;
+    } catch (e, stackTrace) {
+      debugPrint('--- API POST Error ---');
+      debugPrint('Error: $e');
+      debugPrint('Error Type: ${e.runtimeType}');
+      debugPrint('Stack trace: $stackTrace');
+      debugPrint('----------------------');
       throw _handleError(e);
     }
   }

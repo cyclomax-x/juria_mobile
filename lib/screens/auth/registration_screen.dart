@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../services/auth_service.dart';
 import '../../models/registration_request.dart';
 
@@ -204,18 +206,38 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       final request = RegistrationRequest(
         nickname: _usernameController.text.trim(),
         fullname: _fullNameController.text.trim(),
-        nic: _nicController.text.trim().isEmpty ? null : _nicController.text.trim(),
-        city: _cityController.text.trim().isEmpty ? null : _cityController.text.trim(),
-        passport: _passportNumberController.text.trim().isEmpty ? null : _passportNumberController.text.trim(),
-        jpnAddress: _addressJpController.text.trim().isEmpty ? null : _addressJpController.text.trim(),
-        jpnPostalCode: _postalCodeJpController.text.trim().isEmpty ? null : _postalCodeJpController.text.trim(),
-        slAddress: _addressSlController.text.trim().isEmpty ? null : _addressSlController.text.trim(),
-        slPostalCode: _postalCodeSlController.text.trim().isEmpty ? null : _postalCodeSlController.text.trim(),
+        nic: _nicController.text.trim().isEmpty
+            ? null
+            : _nicController.text.trim(),
+        city: _cityController.text.trim().isEmpty
+            ? null
+            : _cityController.text.trim(),
+        passport: _passportNumberController.text.trim().isEmpty
+            ? null
+            : _passportNumberController.text.trim(),
+        jpnAddress: _addressJpController.text.trim().isEmpty
+            ? null
+            : _addressJpController.text.trim(),
+        jpnPostalCode: _postalCodeJpController.text.trim().isEmpty
+            ? null
+            : _postalCodeJpController.text.trim(),
+        slAddress: _addressSlController.text.trim().isEmpty
+            ? null
+            : _addressSlController.text.trim(),
+        slPostalCode: _postalCodeSlController.text.trim().isEmpty
+            ? null
+            : _postalCodeSlController.text.trim(),
         jpnMobile: _mobileJpController.text.trim(),
-        slMobile: _mobileSlController.text.trim().isEmpty ? null : _mobileSlController.text.trim(),
-        email: _emailController.text.trim().isEmpty ? null : _emailController.text.trim(),
+        slMobile: _mobileSlController.text.trim().isEmpty
+            ? null
+            : _mobileSlController.text.trim(),
+        email: _emailController.text.trim().isEmpty
+            ? null
+            : _emailController.text.trim(),
         passportPhoto: _passportImage,
-        password: _passwordController.text.trim().isEmpty ? null : _passwordController.text.trim(),
+        password: _passwordController.text.trim().isEmpty
+            ? null
+            : _passwordController.text.trim(),
       );
 
       // Call registration API
@@ -234,7 +256,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       }
     } catch (e) {
       if (mounted) {
-        _showErrorDialog('Registration failed', {'general': [e.toString()]});
+        _showErrorDialog('Registration failed', {
+          'general': [e.toString()],
+        });
       }
     } finally {
       if (mounted) {
@@ -255,7 +279,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                message.isEmpty ? 'Registration successful! Please login with your credentials.' : message,
+                message.isEmpty
+                    ? 'Registration successful! Please login with your credentials.'
+                    : message,
                 style: const TextStyle(color: Colors.white),
               ),
             ),
@@ -276,7 +302,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   void _showErrorDialog(String message, Map<String, dynamic>? errors) {
     String errorMessage = message;
-    
+
     if (errors != null && errors.isNotEmpty) {
       List<String> errorList = [];
       errors.forEach((field, messages) {
@@ -473,22 +499,24 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: _isLoading 
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          child: _isLoading
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white,
+                                    ),
+                                  ),
+                                )
+                              : const Text(
+                                  'Complete Registration',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                              )
-                            : const Text(
-                                'Complete Registration',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -652,6 +680,32 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               style: Theme.of(
                 context,
               ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 4),
+            Text.rich(
+              TextSpan(
+                text: 'We require a passport photo to verify your identity at custom clearance of your packages. We do not share your information with third parties and will be kept confidential. See our ',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+                children: [
+                  TextSpan(
+                    text: 'Privacy Policy',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      decoration: TextDecoration.underline,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () async {
+                        final url = Uri.parse('https://cargo.juriacargo.com/data/privacy-policy');
+                        if (await canLaunchUrl(url)) {
+                          await launchUrl(url, mode: LaunchMode.externalApplication);
+                        }
+                      },
+                  ),
+                  const TextSpan(text: ' for more details.'),
+                ],
+              ),
             ),
             const SizedBox(height: 8),
             GestureDetector(
@@ -1007,12 +1061,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   },
                 ),
                 Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _agreeTOS = !_agreeTOS;
-                      });
-                    },
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 12),
                     child: Text.rich(
                       TextSpan(
                         text: 'I agree to the ',
@@ -1024,6 +1074,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               color: Theme.of(context).colorScheme.primary,
                               decoration: TextDecoration.underline,
                             ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () async {
+                                final url = Uri.parse('https://cargo.juriacargo.com/data/terms-of-services');
+                                if (await canLaunchUrl(url)) {
+                                  await launchUrl(url, mode: LaunchMode.externalApplication);
+                                }
+                              },
                           ),
                           const TextSpan(text: ' and '),
                           TextSpan(
@@ -1032,6 +1089,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               color: Theme.of(context).colorScheme.primary,
                               decoration: TextDecoration.underline,
                             ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () async {
+                                final url = Uri.parse('https://cargo.juriacargo.com/data/privacy-policy');
+                                if (await canLaunchUrl(url)) {
+                                  await launchUrl(url, mode: LaunchMode.externalApplication);
+                                }
+                              },
                           ),
                         ],
                       ),

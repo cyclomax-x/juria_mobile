@@ -149,6 +149,62 @@ class UserService {
     }
   }
 
+  // Delete user account
+  static Future<Map<String, dynamic>> deleteAccount() async {
+    try {
+      debugPrint('========================================');
+      debugPrint('Initiating account deletion API call...');
+      debugPrint('Endpoint: /api/v1/user/deleteAccount');
+      debugPrint('Method: POST');
+
+      final response = await ApiService.post('/api/v1/user/deleteAccount', {}).timeout(
+        const Duration(seconds: 15), // Reduced timeout to 15 seconds
+        onTimeout: () {
+          debugPrint('!!! API call timed out after 15 seconds !!!');
+          debugPrint('!!! The backend endpoint may not be implemented or is not responding !!!');
+          throw Exception('The server is not responding. The delete account endpoint may not be available yet. Please contact support.');
+        },
+      );
+
+      debugPrint('Delete account API response received: $response');
+      debugPrint('Response status: ${response['status']}');
+      debugPrint('Response message: ${response['message']}');
+      debugPrint('========================================');
+
+      // The backend returns status code as integer
+      if (response['success'] == true) {
+        return {
+          'success': true,
+          'message': response['message'] ?? 'Account deleted successfully!'
+        };
+      } else {
+        return {
+          'success': false,
+          'message': response['message'] ?? 'Failed to delete account'
+        };
+      }
+    } on ApiException catch (e) {
+      debugPrint('!!! Delete account API error !!!');
+      debugPrint('Error message: ${e.message}');
+      debugPrint('Status code: ${e.statusCode}');
+      debugPrint('Errors: ${e.errors}');
+      debugPrint('========================================');
+      return {
+        'success': false,
+        'message': e.userMessage
+      };
+    } catch (e) {
+      debugPrint('!!! Delete account general error !!!');
+      debugPrint('Error type: ${e.runtimeType}');
+      debugPrint('Error: $e');
+      debugPrint('========================================');
+      return {
+        'success': false,
+        'message': 'Failed to delete account: ${e.toString()}'
+      };
+    }
+  }
+
   // Helper method to update local user data storage
   static Future<void> _updateLocalUserData(Map<String, dynamic> customerData) async {
     const String userKey = 'user_data';
