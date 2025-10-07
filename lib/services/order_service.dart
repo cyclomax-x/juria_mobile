@@ -98,7 +98,10 @@ class OrderService {
 
       debugPrint('Calculating price with formData: $formData');
 
-      final response = await ApiService.postMultipart('/api/v1/orders/calPrice', formData);
+      final response = await ApiService.postMultipart(
+        '/api/v1/orders/calPrice',
+        formData,
+      );
       debugPrint('Calculate price API response: $response');
 
       return response;
@@ -150,7 +153,10 @@ class OrderService {
 
       debugPrint('Adding package with formData: $formData');
 
-      final response = await ApiService.postMultipart('/api/v1/orders/addPackage', formData);
+      final response = await ApiService.postMultipart(
+        '/api/v1/orders/addPackage',
+        formData,
+      );
       debugPrint('Add package API response: $response');
 
       return response;
@@ -177,26 +183,21 @@ class OrderService {
       if (orderRequest.senderPassportImage != null ||
           orderRequest.receiverPassportImage != null) {
         // Use multipart request for file uploads
-        if (orderRequest.senderPassportImage != null) {
-          response = await ApiService.postMultipart(
-            '/api/v1/orders/create',
-            formData,
-            file: orderRequest.senderPassportImage,
-            fileField: 'passport_image',
-          );
-        } else {
-          response = await ApiService.postMultipart(
-            '/api/v1/orders/create',
-            formData,
-            file: orderRequest.receiverPassportImage,
-            fileField: 'consignee_passport_image',
-          );
-        }
+        response = await ApiService.postMultipart(
+          '/api/v1/orders/create',
+          formData,
+          files: {
+            if (orderRequest.senderPassportImage != null)
+              'passport_image': orderRequest.senderPassportImage!,
+            if (orderRequest.receiverPassportImage != null)
+              'consignee_passport_image': orderRequest.receiverPassportImage!,
+          },
+        );
       } else {
         // Use regular POST request
-        response = await ApiService.post(
+        response = await ApiService.postMultipart(
           '/api/v1/orders/create',
-          orderRequest.toJson(),
+          formData,
         );
       }
 
@@ -249,7 +250,10 @@ class OrderService {
 
       debugPrint('Getting order history with formData: $formData');
 
-      final response = await ApiService.postMultipart('/api/v1/orders/searchWaybillHistory', formData);
+      final response = await ApiService.postMultipart(
+        '/api/v1/orders/searchWaybillHistory',
+        formData,
+      );
       debugPrint('Order history API response: $response');
 
       if (response['success'] == true && response['data'] != null) {
@@ -301,7 +305,9 @@ class OrderService {
   // Get dashboard data
   static Future<DashboardData> getMobileDashboardData() async {
     try {
-      final response = await ApiService.get('/api/v1/orders/getMobileDashboardData');
+      final response = await ApiService.get(
+        '/api/v1/orders/getMobileDashboardData',
+      );
       debugPrint('Dashboard data API response: $response');
 
       if (response['success'] == true) {

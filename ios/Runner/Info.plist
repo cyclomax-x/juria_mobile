@@ -49,9 +49,11 @@
 
 	<!-- 🔐 Permissions -->
 	<key>NSCameraUsageDescription</key>
-	<string>This app needs camera access to take photos.</string>
+	<string>Allow camera access to take a photo of your passport for identity verification. The photo will be securely uploaded for verification and removed after verification is complete.</string>
+
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app needs access to your photo library to upload and select images.</string>
+	<string>Allow access to your photo library so you can select a passport photo for identity verification. The selected photo will be securely uploaded for verification and removed after verification is complete.</string>
+
 
 	<!-- 🌐 Allow HTTP if needed -->
 	<!-- Remove this block if you only use HTTPS -->

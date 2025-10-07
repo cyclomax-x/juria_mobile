@@ -149,12 +149,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   void _nextStep() {
     if (_formKeys[_currentStep].currentState!.validate()) {
-      if (_currentStep == 0 && _passportImage == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please add a passport photo')),
-        );
-        return;
-      }
+      // if (_currentStep == 0 && _passportImage == null) {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     const SnackBar(content: Text('Please add a passport photo')),
+      //   );
+      //   return;
+      // }
       if (_currentStep == 2 && !_agreeTOS) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -676,7 +676,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             const SizedBox(height: 24),
 
             Text(
-              'Passport Photo',
+              'Passport Photo (Optional)',
               style: Theme.of(
                 context,
               ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
@@ -684,7 +684,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             const SizedBox(height: 4),
             Text.rich(
               TextSpan(
-                text: 'We require a passport photo to verify your identity at custom clearance of your packages. We do not share your information with third parties and will be kept confidential. See our ',
+                text: 'We suggest you to submit a passport photo to verify your identity at custom clearance of your packages. We do not share your information with third parties and will be kept confidential. See our ',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),

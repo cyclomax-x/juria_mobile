@@ -159,7 +159,7 @@ class _ReceiverDetailsStepState extends State<ReceiverDetailsStep> {
             ),
             const SizedBox(height: 16),
             _buildImageUploadSection(
-              'Passport Image',
+              'Passport Image (Optional)',
               widget.passportImage,
               widget.onImageSelected,
             ),
@@ -198,7 +198,7 @@ class _ReceiverDetailsStepState extends State<ReceiverDetailsStep> {
         Text.rich(
           TextSpan(
             text:
-                'We require a passport photo to verify receiver identity at custom clearance of your packages. We do not share your/receiver information with third parties and will be kept confidential. See our ',
+                'We suggest you to submit a passport photo to verify receiver identity at custom clearance of your packages. We do not share your/receiver information with third parties and will be kept confidential. See our ',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),

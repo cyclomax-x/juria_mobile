@@ -142,7 +142,7 @@ class _SenderDetailsStepState extends State<SenderDetailsStep> {
             ),
             const SizedBox(height: 16),
             _buildImageUploadSection(
-              'Passport Image',
+              'Passport Image (Optional)',
               widget.passportImage,
               widget.onImageSelected,
             ),
@@ -181,7 +181,7 @@ class _SenderDetailsStepState extends State<SenderDetailsStep> {
         Text.rich(
           TextSpan(
             text:
-                'We require a passport photo to verify your identity at custom clearance of your packages. We do not share your information with third parties and will be kept confidential. See our ',
+                'We suggest you to submit a passport photo to verify your identity at custom clearance of your packages. We do not share your information with third parties and will be kept confidential. See our ',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),

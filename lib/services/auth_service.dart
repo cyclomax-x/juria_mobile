@@ -23,6 +23,7 @@ class AuthService {
         );
       }
 
+
       // Prepare form data
       final formData = request.toFormData();
 
@@ -36,7 +37,7 @@ class AuthService {
           fileField: 'passport_photo',
         );
       } else {
-        response = await ApiService.post('/client/register', request.toJson());
+        response = await ApiService.postMultipart('/client/register', formData);
       }
 
       debugPrint('Registration API response - pure: $response');

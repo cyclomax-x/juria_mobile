@@ -642,21 +642,21 @@ class _NewOrderPageState extends State<NewOrderPage> {
     switch (_currentStep) {
       case 0:
         isValid = _senderFormKey.currentState!.validate();
-        if (isValid && _senderPassportImage == null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Please upload passport image')),
-          );
-          isValid = false;
-        }
+        // if (isValid && _senderPassportImage == null) {
+        //   ScaffoldMessenger.of(context).showSnackBar(
+        //     const SnackBar(content: Text('Please upload passport image')),
+        //   );
+        //   isValid = false;
+        // }
         break;
       case 1:
         isValid = _receiverFormKey.currentState!.validate();
-        if (isValid && _receiverPassportImage == null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Please upload passport image')),
-          );
-          isValid = false;
-        }
+        // if (isValid && _receiverPassportImage == null) {
+        //   ScaffoldMessenger.of(context).showSnackBar(
+        //     const SnackBar(content: Text('Please upload passport image')),
+        //   );
+        //   isValid = false;
+        // }
         break;
       case 2:
         if (_packageList.isEmpty) {
@@ -761,6 +761,7 @@ class _NewOrderPageState extends State<NewOrderPage> {
           // Close loading dialog and show error
           if (mounted) Navigator.of(context).pop();
           if (mounted) {
+            debugPrint('Order creation failed: ${orderResponse.userMessage}');
             _showOrderErrorDialog(orderResponse.userMessage);
           }
           return;

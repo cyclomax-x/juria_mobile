@@ -12,6 +12,7 @@ class JuriaCargoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Juria Cargo',
       theme: _buildTheme(),
       home: const WelcomeScreen(),

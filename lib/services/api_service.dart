@@ -6,8 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  // static const String baseUrl = 'http://192.168.1.98/Juria';
-  static const String baseUrl = 'http://43.204.136.204';
+  static const String baseUrl = 'http://192.168.1.98/Juria';
+  // static const String baseUrl = 'http://43.204.136.204';
   
   // HTTP client with timeout
   static final http.Client _client = http.Client();
@@ -125,23 +125,23 @@ class ApiService {
 
   // Multipart POST request (for file uploads)
   static Future<Map<String, dynamic>> postMultipart(
-    String endpoint, 
-    Map<String, String> fields, 
-    {File? file, String? fileField}
+    String endpoint,
+    Map<String, String> fields,
+    {File? file, String? fileField, Map<String, File>? files}
   ) async {
     try {
       final includeAuth = !_publicEndpoints.contains(endpoint);
       final headers = await _getMultipartHeaders(includeAuth: includeAuth);
-      
+
       var request = http.MultipartRequest('POST', Uri.parse('$baseUrl$endpoint'));
-      
+
       // Add headers
       request.headers.addAll(headers);
-      
+
       // Add fields
       request.fields.addAll(fields);
-      
-      // Add file if provided
+
+      // Add single file if provided (for backward compatibility)
       if (file != null && fileField != null) {
         var stream = http.ByteStream(file.openRead());
         var length = await file.length();
@@ -150,9 +150,20 @@ class ApiService {
         request.files.add(multipartFile);
       }
 
+      // Add multiple files if provided
+      if (files != null) {
+        for (var entry in files.entries) {
+          var stream = http.ByteStream(entry.value.openRead());
+          var length = await entry.value.length();
+          var multipartFile = http.MultipartFile(entry.key, stream, length,
+              filename: entry.value.path.split('/').last);
+          request.files.add(multipartFile);
+        }
+      }
+
       final streamedResponse = await _client.send(request).timeout(const Duration(seconds: 30));
       final response = await http.Response.fromStream(streamedResponse);
-      
+
       return _handleResponse(response);
     } catch (e) {
       throw _handleError(e);
