@@ -6,8 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.98/Juria';
-  // static const String baseUrl = 'http://43.204.136.204';
+  // static const String baseUrl = 'http://192.168.1.98/Juria';
+  static const String baseUrl = 'http://43.204.136.204';
   
   // HTTP client with timeout
   static final http.Client _client = http.Client();
